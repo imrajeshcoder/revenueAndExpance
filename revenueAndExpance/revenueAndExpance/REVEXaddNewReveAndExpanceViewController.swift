@@ -11,13 +11,13 @@ class REVEXaddNewReveAndExpanceViewController: UIViewController {
     var datePicke = UIDatePicker()
     var toolBar = UIToolbar()
     let cellReuseIdentifier = "REVEXcellRevExDisplayTableViewCell"
-        
-        var db:DBHelper = DBHelper()
+    var db:DBHelper = DBHelper()
     var isRevenue : Int = 1
-        var revExpance:[RevExpance] = []
-        
+    var revExpance:[RevExpance]? = []
+    var isEditingRecord = false
     @IBOutlet weak var btnrevenue: UIButton!
     
+    @IBOutlet weak var btnOutletSaveEdit: UIButton!
     @IBOutlet weak var btnexpance: UIButton!
     @IBOutlet weak var lblItemNameDisplay: UILabel!
     @IBOutlet weak var txtItemName: UITextField!
@@ -27,16 +27,38 @@ class REVEXaddNewReveAndExpanceViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        btnrevenue.isSelected = true
-        lblItemNameDisplay.text = "Enter \(btnrevenue.currentTitle!) Name"
-        // Do any additional setup after loading the view.
+        if isEditingRecord == true
+        {
+            if ( revExpance?[0].isRevenue == 1 )
+            {
+                btnexpance.isSelected = false
+                btnrevenue.isSelected = true
+                lblItemNameDisplay.text = "Enter \(btnrevenue.currentTitle!) Name"
+            }
+            else
+            {
+                btnrevenue.isSelected = false
+                btnexpance.isSelected = true
+                lblItemNameDisplay.text = "Enter \(btnexpance.currentTitle!) Name"
+            }
+            btnOutletSaveEdit.setTitle("Edit", for: .normal)
+            txtItemName.text = revExpance?[0].itemName
+            txtAmount.text = String((revExpance?[0].amount)!)
+            txtDate.text = revExpance?[0].date
+        }
+        else
+        {
+            btnrevenue.isSelected = true
+            btnexpance.isSelected = false
+            lblItemNameDisplay.text = "Enter \(btnexpance.currentTitle!) Name"
+            btnOutletSaveEdit.setTitle("Save", for: .normal)
+            // Do any additional setup after loading the view.
+            
+        }
         datePicke.datePickerMode = .dateAndTime
         datePicke.preferredDatePickerStyle = .wheels
-        let yesterdayDate = Calendar.current.date(byAdding: .day, value: 0, to: Date())
-       // datePicke.maximumDate = yesterdayDate
         txtDate.inputView = datePicke
-        
-        
+
         var item = [UIBarButtonItem]()
         item.append(UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel)))
         let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
@@ -90,13 +112,17 @@ class REVEXaddNewReveAndExpanceViewController: UIViewController {
     }
 
     @IBAction func btnActionRevAndExpanceChangeTouchUpInside(_ sender: UIButton) {
-        
+        if (!isEditingRecord)
+        {
+            isRevenue = sender.tag
+            txtDate.text = ""
+            txtItemName.text = ""
+            txtAmount.text = ""
+            lblItemNameDisplay.text = "Enter \(sender.currentTitle!) Name"
+        }
         radioUnselectRevAndExp()
-        isRevenue = sender.tag
-        txtDate.text = ""
-        txtItemName.text = ""
         sender.isSelected = true
-        lblItemNameDisplay.text = "Enter \(sender.currentTitle!) Name"
+        
     }
     @IBAction func btnActionCalenderTouchUpInside(_ sender: UIButton) {
     }
@@ -104,10 +130,27 @@ class REVEXaddNewReveAndExpanceViewController: UIViewController {
     @IBAction func btnActionSaveTouchUpInside(_ sender: UIButton) {
         if (txtItemName.text != "" && txtDate.text != "" && txtAmount.text != "" )
         {
+           if (isEditingRecord)
+           {
+            if(btnrevenue.isSelected == true)
+            {
+                isRevenue = 1
+            }
+            else
+            {
+                isRevenue = 0
+            }
+                db.updateByID(itemId: (revExpance?[0].itemId)!, itemName: txtItemName.text!, amount: Int(txtAmount.text!)!, date: txtDate.text!, isrevenue: isRevenue)
+            self.navigationController?.popViewController(animated: true)
+           }
+           else
+           {
             var amount : Int = Int(txtAmount.text!)!
             
             print("AMOUNT: =======\(amount)")
             db.insert(itemName: txtItemName.text!, date: txtDate.text!, isRevenue: isRevenue, amount: amount)
+            self.navigationController?.popViewController(animated: true)
+           }
         }
         else
         {

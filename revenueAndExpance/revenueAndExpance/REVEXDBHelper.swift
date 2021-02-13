@@ -7,23 +7,27 @@
 import Foundation
 import SQLite3
 
-
-
-var itemId: Int = 0
-var itemName: String = ""
-var date: String = ""
-var isRevenue : Bool = true
-
 let dbPath: String = "myDb.sqlite"
-var db:OpaquePointer?
 
 class DBHelper
 {
+    var db:OpaquePointer?
     init()
     {
-        db = openDatabase()
-        createTable()
+        
     }
+    
+    func databaseClose()  {
+        if sqlite3_close(self.db)  != SQLITE_OK
+        {
+            print("NOT CLOSE DATABASE")
+        }
+        else
+        {
+            print(" SUCCESSFULY CLOSE DATABASE")
+        }
+    }
+    
     func openDatabase() -> OpaquePointer?
     {
         let fileURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
@@ -40,9 +44,12 @@ class DBHelper
             print("Successfully opened connection to database at \(dbPath)")
             return db
         }
+        
     }
     func createTable() {
-        let createTableString = "CREATE TABLE IF NOT EXISTS revexpance (itemid INTEGER PRIMARY KEY, itemname TEXT, date TEXT, isrevenue INTEGER , amount INTEGER);"
+        //databaseClose()
+        db = openDatabase()
+        let createTableString = "CREATE TABLE IF NOT EXISTS revexpance (itemid INTEGER PRIMARY KEY AUTOINCREMENT, itemname TEXT, date TEXT, isrevenue INTEGER , amount INTEGER);"
         var createTableStatement: OpaquePointer? = nil
         if sqlite3_prepare_v2(db, createTableString, -1, &createTableStatement, nil) == SQLITE_OK
         {
@@ -56,33 +63,44 @@ class DBHelper
             print("CREATE TABLE statement could not be prepared.")
         }
         sqlite3_finalize(createTableStatement)
+        databaseClose()
     }
     
     func insert(itemName:String, date: String, isRevenue : Int, amount: Int)
     {
-        let insertStatementString = "INSERT INTO revexpance (itemid, itemname, date, isrevenue, amount) VALUES (?, ?, ?, ?, ?);"
+       // databaseClose()
+        db=openDatabase()
+        let insertStatementString = "INSERT INTO revexpance (itemname, date, isrevenue, amount) VALUES (?, ?, ?, ?);"
         var insertStatement: OpaquePointer? = nil
         if sqlite3_prepare_v2(db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
-            sqlite3_bind_int(insertStatement, 1, Int32(3))
-            sqlite3_bind_text(insertStatement, 2, (itemName as NSString).utf8String, -1, nil)
-            sqlite3_bind_text(insertStatement, 3, (date as NSString).utf8String, -1, nil)
-            sqlite3_bind_int(insertStatement, 4, Int32(isRevenue))
-            sqlite3_bind_int(insertStatement, 4, Int32(amount))
+            if sqlite3_bind_text(insertStatement, 1, (itemName as NSString).utf8String, -1, nil) != SQLITE_OK { print("Error Binding itemName") }
+            if sqlite3_bind_text(insertStatement, 2, (date as NSString).utf8String, -1, nil) != SQLITE_OK { print("Error Binding date") }
+            if sqlite3_bind_int(insertStatement, 3, Int32(isRevenue)) != SQLITE_OK { print("Error Binding isRevenue") }
+            if sqlite3_bind_int(insertStatement, 4, Int32(amount)) != SQLITE_OK { print("Error Binding amount") }
            
            
-            if sqlite3_step(insertStatement) == SQLITE_OK {
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
                 print("Successfully inserted row. " )
                 
             } else {
+                let errmsg = String(cString: sqlite3_errmsg(db)!)
+                            print("failure inserting hero: \(errmsg)")
+                       
+                let errCode = sqlite3_errcode(db)
+                            print("failure inserting hero: \(errCode)")
+                
                 print("Could not insert row.")
             }
         } else {
             print("INSERT statement could not be prepared.")
         }
         sqlite3_finalize(insertStatement)
+        databaseClose()
     }
     func countNoOfItemInDataBase() -> Int
     {
+        //databaseClose()
+        db=openDatabase()
         let selectStatementString = "select COUNT(itemid) from revexpance;"
         var selectStatement: OpaquePointer? = nil
         if sqlite3_prepare_v2(db, selectStatementString, -1, &selectStatement, nil) == SQLITE_OK
@@ -98,10 +116,12 @@ class DBHelper
             let errmsg = String(cString: sqlite3_errmsg(db)!)
             print("error preparing select: \(errmsg)")
         }
-             
+        databaseClose()
         return 0
     }
     func readAll() -> [RevExpance] {
+        //databaseClose()
+        db=openDatabase()
         let queryStatementString = "SELECT * FROM revexpance;"
         var queryStatement: OpaquePointer? = nil
         var revex : [RevExpance] = []
@@ -120,14 +140,33 @@ class DBHelper
             print("SELECT statement could not be prepared")
         }
         sqlite3_finalize(queryStatement)
+        databaseClose()
         return revex
     }
     
-    func deleteByID(id:Int) {
-        let deleteStatementStirng = "DELETE FROM person WHERE Id = ?;"
+    func updateByID(itemId:Int, itemName: String, amount: Int, date: String, isrevenue: Int) {
+        db = openDatabase()
+        let updateStatementStirng = "UPDATE revexpance SET itemName='\(itemName)', amount=\(amount), date='\(date)', isrevenue=\(isrevenue) WHERE itemid=\(itemId)"
+       // let deleteStatementStirng = "DELETE FROM revexpance WHERE itemid =\(itemId) "
+        var updateStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(db, updateStatementStirng, -1, &updateStatement, nil) == SQLITE_OK {
+            if sqlite3_step(updateStatement) == SQLITE_DONE {
+                print("Successfully Update row.")
+            } else {
+                print("Could not Update row.")
+            }
+        } else {
+            let errmsg = String(cString: sqlite3_errmsg(db)!)
+            print("Update statement could not be prepared", errmsg , errno)
+        }
+        sqlite3_finalize(updateStatement)
+        databaseClose()
+    }
+    func deleteByID(itemId:Int) {
+        db = openDatabase()
+        let deleteStatementStirng = "DELETE FROM revexpance WHERE itemid =\(itemId) "
         var deleteStatement: OpaquePointer? = nil
         if sqlite3_prepare_v2(db, deleteStatementStirng, -1, &deleteStatement, nil) == SQLITE_OK {
-            sqlite3_bind_int(deleteStatement, 1, Int32(id))
             if sqlite3_step(deleteStatement) == SQLITE_DONE {
                 print("Successfully deleted row.")
             } else {
@@ -137,11 +176,13 @@ class DBHelper
             print("DELETE statement could not be prepared")
         }
         sqlite3_finalize(deleteStatement)
+        databaseClose()
     }
     
     func readOnlyRevenue() -> [RevExpance]
     {
-        let queryStatementString = "SELECT * FROM revexpance WHERE isrevenue=1;"
+        openDatabase()
+        let queryStatementString = "SELECT * FROM revexpance WHERE isrevenue=1"
         var queryStatement: OpaquePointer? = nil
         var revex : [RevExpance] = []
         if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
@@ -151,7 +192,7 @@ class DBHelper
                 let date = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
                 let isRevenue = sqlite3_column_int(queryStatement, 3)
                 let amount = sqlite3_column_int(queryStatement, 4)
-                revex.append(RevExpance(itemId: Int(itemId), itemName: ItemName, date: date, isRevenue: Int(isRevenue), amount: Int(amount)))
+                revex.append(RevExpance(itemId: Int(itemId), itemName: ItemName, date: date, isRevenue: Int(isRevenue), amount: Int(amount) ))
                 print("Query Result:")
                 print("\(itemId) | \(ItemName) | \(date) | \(isRevenue)")
             }
@@ -159,13 +200,16 @@ class DBHelper
             print("SELECT statement could not be prepared")
         }
         sqlite3_finalize(queryStatement)
+        databaseClose()
         return revex
     }
     
-    func readOnlyExpance() -> [RevExpance]
+    func readOnlyRevenueOrExpance(isRevenue: Int) -> [RevExpance]
     {
-        let queryStatementString = "SELECT * FROM revexpance WHERE isrevenue=0;"
+        db=openDatabase()
+        let queryStatementString = "SELECT * FROM revexpance WHERE isrevenue=\(isRevenue)"
         var queryStatement: OpaquePointer? = nil
+       // sqlite3_bind_int(queryStatement, 1, Int32(isRevenue))
         var revex : [RevExpance] = []
         if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
             while sqlite3_step(queryStatement) == SQLITE_ROW {
@@ -174,7 +218,7 @@ class DBHelper
                 let date = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
                 let isRevenue = sqlite3_column_int(queryStatement, 3)
                 let amount = sqlite3_column_int(queryStatement, 4)
-                revex.append(RevExpance(itemId: Int(itemId), itemName: ItemName, date: date, isRevenue: Int(isRevenue), amount: Int(amount)))
+                revex.append(RevExpance(itemId: Int(itemId), itemName: ItemName, date: date, isRevenue: Int(isRevenue), amount: Int(amount) ))
                 print("Query Result:")
                 print("\(itemId) | \(ItemName) | \(date) | \(isRevenue)")
             }
@@ -182,6 +226,7 @@ class DBHelper
             print("SELECT statement could not be prepared")
         }
         sqlite3_finalize(queryStatement)
+        databaseClose()
         return revex
     }
     

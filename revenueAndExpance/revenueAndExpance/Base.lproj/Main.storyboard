@@ -11,7 +11,7 @@
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="revenueAndExpance" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ViewController" id="BYZ-38-t0r" customClass="ViewController" customModule="revenueAndExpance" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -48,31 +48,36 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="TOV-zz-Opx">
                                 <rect key="frame" x="15" y="228" width="384" height="534"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <searchBar key="tableHeaderView" contentMode="redraw" id="Dg9-oG-T8M">
+                                    <rect key="frame" x="0.0" y="0.0" width="384" height="44"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                    <textInputTraits key="textInputTraits"/>
+                                </searchBar>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="REVEXcellRevExDisplayTableViewCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="REVEXcellRevExDisplayTableViewCell" rowHeight="94" id="gxs-yw-qfa" customClass="REVEXcellRevExDisplayTableViewCell" customModule="revenueAndExpance" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="384" height="94"/>
+                                        <rect key="frame" x="0.0" y="72" width="384" height="94"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="gxs-yw-qfa" id="vne-lJ-avp">
                                             <rect key="frame" x="0.0" y="0.0" width="384" height="94"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <stackView opaque="NO" contentMode="right" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="en8-Tu-Eie">
-                                                    <rect key="frame" x="5" y="10" width="374" height="20.5"/>
+                                                <stackView opaque="NO" contentMode="right" distribution="fillEqually" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="en8-Tu-Eie">
+                                                    <rect key="frame" x="5" y="10" width="374" height="74"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="01 01 1 " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V1D-Ik-7ve">
-                                                            <rect key="frame" x="0.0" y="0.0" width="181.5" height="20.5"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="01 01 1 " textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V1D-Ik-7ve">
+                                                            <rect key="frame" x="0.0" y="0.0" width="124.5" height="20.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Epp-Gf-2fh">
-                                                            <rect key="frame" x="181.5" y="0.0" width="134" height="20.5"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Epp-Gf-2fh">
+                                                            <rect key="frame" x="124.5" y="0.0" width="125" height="20.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="01" textAlignment="justified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="voT-Pm-WsP">
-                                                            <rect key="frame" x="315.5" y="0.0" width="58.5" height="20.5"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="01" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="voT-Pm-WsP">
+                                                            <rect key="frame" x="249.5" y="0.0" width="124.5" height="20.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
@@ -81,12 +86,12 @@
                                                     <constraints>
                                                         <constraint firstItem="voT-Pm-WsP" firstAttribute="top" secondItem="en8-Tu-Eie" secondAttribute="top" id="N5A-Zc-Bic"/>
                                                         <constraint firstAttribute="trailing" secondItem="voT-Pm-WsP" secondAttribute="trailing" id="dSl-OZ-IZw"/>
-                                                        <constraint firstAttribute="bottom" secondItem="voT-Pm-WsP" secondAttribute="bottom" id="kxh-ui-Aj5"/>
                                                     </constraints>
                                                 </stackView>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="en8-Tu-Eie" firstAttribute="leading" secondItem="vne-lJ-avp" secondAttribute="leading" constant="5" id="MVE-7a-9Zg"/>
+                                                <constraint firstAttribute="bottom" secondItem="en8-Tu-Eie" secondAttribute="bottom" constant="10" id="OMe-yK-KLy"/>
                                                 <constraint firstItem="en8-Tu-Eie" firstAttribute="top" secondItem="vne-lJ-avp" secondAttribute="top" constant="10" id="xVe-Xt-g0r"/>
                                                 <constraint firstAttribute="trailing" secondItem="en8-Tu-Eie" secondAttribute="trailing" constant="5" id="zUf-mH-mkK"/>
                                             </constraints>
@@ -137,28 +142,29 @@
                             <constraint firstItem="hZ4-cd-acX" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="Tpy-xd-rwE"/>
                             <constraint firstItem="Uba-8k-IPv" firstAttribute="leading" secondItem="hZ4-cd-acX" secondAttribute="trailing" constant="10" id="VYM-6s-0kX"/>
                             <constraint firstItem="gQM-Ra-fLu" firstAttribute="top" secondItem="TOV-zz-Opx" secondAttribute="bottom" constant="10" id="c9R-at-qsc"/>
+                            <constraint firstItem="TOV-zz-Opx" firstAttribute="top" secondItem="Yw1-Dh-JOO" secondAttribute="bottom" constant="10" id="hNd-YX-3Qg"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="TOV-zz-Opx" secondAttribute="bottom" constant="100" id="hT3-rH-iz2"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Yw1-Dh-JOO" secondAttribute="trailing" constant="10" id="i9w-SB-Sjc"/>
                             <constraint firstItem="hZ4-cd-acX" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="kjc-ou-SEE"/>
-                            <constraint firstItem="TOV-zz-Opx" firstAttribute="top" secondItem="Yw1-Dh-JOO" secondAttribute="bottom" constant="10" id="nxb-N2-TFG"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="TOV-zz-Opx" secondAttribute="trailing" constant="15" id="owm-nr-8gi"/>
                             <constraint firstItem="TOV-zz-Opx" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="15" id="qhC-5M-4DO"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Uba-8k-IPv" secondAttribute="trailing" constant="20" id="tuv-GA-CHR"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="ZC0-X6-lOG">
-                        <barButtonItem key="rightBarButtonItem" image="plus" id="jeB-GG-9KF"/>
+                        <barButtonItem key="rightBarButtonItem" title="Item" id="jeB-GG-9KF"/>
                     </navigationItem>
                     <connections>
                         <outlet property="lblDisplayTotal" destination="lMx-rr-CYI" id="j5h-Js-P4K"/>
                         <outlet property="sgmntRevAndExpance" destination="Yw1-Dh-JOO" id="TjS-Bu-GXf"/>
+                        <outlet property="srchbarFilterTableData" destination="Dg9-oG-T8M" id="7HC-dr-zgr"/>
                         <outlet property="tblDataDisplay" destination="TOV-zz-Opx" id="dul-Pt-UbD"/>
                         <outlet property="txtDate" destination="hZ4-cd-acX" id="2ae-Lf-XE0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1384" y="332"/>
+            <point key="canvasLocation" x="-401" y="779"/>
         </scene>
         <!--Xadd New Reve And Expance View Controller-->
         <scene sceneID="0v0-aG-lne">
@@ -278,6 +284,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="0H0-3V-v2z"/>
                     <connections>
+                        <outlet property="btnOutletSaveEdit" destination="SQy-TF-yMD" id="2ar-8s-p8g"/>
                         <outlet property="btnexpance" destination="chK-qq-SAM" id="Xb7-7c-UNL"/>
                         <outlet property="btnrevenue" destination="SGd-9x-vK5" id="CLX-PY-4Tp"/>
                         <outlet property="lblItemNameDisplay" destination="2J1-Py-WYp" id="LtG-pc-Aa3"/>
@@ -288,7 +295,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kOl-S1-efk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2141" y="108"/>
+            <point key="canvasLocation" x="339" y="786"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="dTm-sZ-rDh">
@@ -299,7 +306,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="hSO-sV-kU6"/>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="YIh-0Y-wos"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rnm-6i-dGq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -311,7 +318,6 @@
         <image name="calender" width="512" height="512"/>
         <image name="circle" catalog="system" width="128" height="121"/>
         <image name="circle.fill" catalog="system" width="128" height="121"/>
-        <image name="plus" width="512" height="512"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
