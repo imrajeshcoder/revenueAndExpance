@@ -75,21 +75,15 @@ class ViewController: UIViewController , UITableViewDelegate , UITableViewDataSo
         if sgmntRevAndExpance.selectedSegmentIndex == 0
         {
             revExpance = db.readOnlyRevenueOrExpance(isRevenue: 1)
-            //tblDataDisplay.reloadData()
-            //lblDisplayTotal.text = "\(total)"
             
         }
         else
         {
             revExpance = db.readOnlyRevenueOrExpance(isRevenue: 0)
-            //tblDataDisplay.reloadData()
-            //lblDisplayTotal.text = "\(total)"
         }
-        
         setAndCountNoOfDistinctDate()
         tblDataDisplay.reloadData()
         lblDisplayTotal.text = "\(total)"
-        // let a = setAndCountNoOfDistinctDate()
     }
     
     @objc func cancel()
@@ -163,6 +157,28 @@ class ViewController: UIViewController , UITableViewDelegate , UITableViewDataSo
             self.navigationController?.pushViewController(vc, animated: true)
         }
     }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        let deleteAction =  UIContextualAction(style: .normal, title: "Delete", handler: { (action,view,completionHandler ) in
+            //do stuff
+            self.displayDeleteAlert { (iSsuccess) in
+                if (iSsuccess)
+                {
+                    self.revExpance.remove(at: indexPath.row)
+                    self.arrDayWiseData[indexPath.section].data.remove(at: indexPath.row)
+                    self.tblDataDisplay.deleteRows(at: [IndexPath(row: indexPath.row, section: indexPath.section)], with: UITableView.RowAnimation.fade)
+                    self.tblDataDisplay.reloadData()
+                }
+                completionHandler(true)
+            }
+        })
+        deleteAction.image = UIImage(named: "delete")
+        deleteAction.backgroundColor = UIColor(red: 255/255, green: 52/255, blue: 52/255, alpha: 1)
+        var deleteConfiguration : UISwipeActionsConfiguration
+        deleteConfiguration = UISwipeActionsConfiguration(actions: [deleteAction])
+        return deleteConfiguration
+    }
     //
     //    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     //        return 40
@@ -178,20 +194,14 @@ class ViewController: UIViewController , UITableViewDelegate , UITableViewDataSo
        if sgmntRevAndExpance.selectedSegmentIndex == 0
        {
            revExpance = db.readOnlyRevenueOrExpance(isRevenue: 1)
-           //tblDataDisplay.reloadData()
-           //lblDisplayTotal.text = "\(total)"
-           
        }
        else
        {
            revExpance = db.readOnlyRevenueOrExpance(isRevenue: 0)
-           //tblDataDisplay.reloadData()
-           //lblDisplayTotal.text = "\(total)"
        }
        setAndCountNoOfDistinctDate()
        tblDataDisplay.reloadData()
        lblDisplayTotal.text = "\(total)"
-        
     }
     
     func ChangeDateFormate1(date: String) -> String
@@ -247,27 +257,7 @@ class ViewController: UIViewController , UITableViewDelegate , UITableViewDataSo
     
     ////////////////////////
     
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        
-        let deleteAction =  UIContextualAction(style: .normal, title: "Delete", handler: { (action,view,completionHandler ) in
-            //do stuff
-            self.displayDeleteAlert { (iSsuccess) in
-                if (iSsuccess)
-                {
-                    self.revExpance.remove(at: indexPath.row)
-                    self.arrDayWiseData[indexPath.section].data.remove(at: indexPath.row)
-                    self.tblDataDisplay.deleteRows(at: [IndexPath(row: indexPath.row, section: indexPath.section)], with: UITableView.RowAnimation.fade)
-                    self.tblDataDisplay.reloadData()
-                }
-                completionHandler(true)
-            }
-        })
-        deleteAction.image = UIImage(named: "delete")
-        deleteAction.backgroundColor = UIColor(red: 255/255, green: 52/255, blue: 52/255, alpha: 1)
-        var deleteConfiguration : UISwipeActionsConfiguration
-        deleteConfiguration = UISwipeActionsConfiguration(actions: [deleteAction])
-        return deleteConfiguration
-    }
+    
     
     func displayDeleteAlert(completion:@escaping (Bool) -> Void){
         let alert = UIAlertController(title: "Delete Alert", message: "Are you Sure Want to Delete This?", preferredStyle: .alert)
@@ -289,36 +279,57 @@ class ViewController: UIViewController , UITableViewDelegate , UITableViewDataSo
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        tmparrDayWiseData = []
+        
+        total = 0
         let filterText = srchbarFilterTableData.text
         if (filterText != "")
         {
-            
-            for item in arrDayWiseData {
-                print(item)
-               // print(item.data[0].itemName)
-                for a in item.data {
-                    if (a.itemName.lowercased().contains((filterText?.lowercased())!))
-                    {
-                        print("##########",a.date)
-                        tmparrDayWiseData.append(DayData(strDate: a.date, data: []))
-                    }
+            tmparrDayWiseData = []
+            arrayDistinctDate.removeAll()
+            for item in revExpance {
+                let convertedDate = ChangeDateFormate(date: item.date)
+                if (item.itemName.lowercased().contains((filterText?.lowercased())!) && arrayDistinctDate.contains(convertedDate) == false)
+                {
+                    arrayDistinctDate.append(convertedDate)
+                    tmparrDayWiseData.append(DayData(strDate: convertedDate, data: []))
                 }
             }
-            print("$$$$$$$$")
-            print(tmparrDayWiseData)
-            print("$$$$$$$")
-            
+            //
             for data in revExpance{
                 for (index,dayData) in tmparrDayWiseData.enumerated(){
-                    if data.date.contains(dayData.strDate) {
+                    if (ChangeDateFormate(date:  data.date)  == ChangeDateFormate1(date:  dayData.strDate) && data.itemName.lowercased().contains((filterText?.lowercased())!)  )  {
                         tmparrDayWiseData[index].data.append(data)
                         total += Float(data.amount)
                     }
                 }
             }
             arrDayWiseData = tmparrDayWiseData
-            tblDataDisplay.reloadData()
+//
+//            for item in arrDayWiseData {
+//                print(item)
+//               // print(item.data[0].itemName)
+//                for a in item.data {
+//                    if (a.itemName.lowercased().contains((filterText?.lowercased())!))
+//                    {
+//                        print("##########",a.date)
+//                        tmparrDayWiseData.append(DayData(strDate: a.date, data: []))
+//                    }
+//                }
+//            }
+////            print("$$$$$$$$")
+////            print(tmparrDayWiseData)
+////            print("$$$$$$$")
+//
+//            for data in revExpance{
+//                for (index,dayData) in tmparrDayWiseData.enumerated(){
+//                    if data.date.contains(dayData.strDate) {
+//                        tmparrDayWiseData[index].data.append(data)
+//                        total += Float(data.amount)
+//                    }
+//                }
+//            }
+            
+           
             
 //            arrayDistinctDate = []
 //            for item in revExpance {
@@ -339,6 +350,38 @@ class ViewController: UIViewController , UITableViewDelegate , UITableViewDataSo
 //            }]
 //
         }
+        else
+        {
+            total = 0
+            arrayDistinctDate.removeAll()
+            arrDayWiseData.removeAll()
+           
+           if sgmntRevAndExpance.selectedSegmentIndex == 0
+           {
+            
+               revExpance = db.readOnlyRevenueOrExpance(isRevenue: 1)
+               //tblDataDisplay.reloadData()
+               //lblDisplayTotal.text = "\(total)"
+               
+           }
+           else
+           {
+               revExpance = db.readOnlyRevenueOrExpance(isRevenue: 0)
+               //tblDataDisplay.reloadData()
+               //lblDisplayTotal.text = "\(total)"
+           }
+           setAndCountNoOfDistinctDate()
+        }
+        tblDataDisplay.reloadData()
+        lblDisplayTotal.text = "\(total)"
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        srchbarFilterTableData.resignFirstResponder()
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        srchbarFilterTableData.resignFirstResponder()
     }
     
 }
