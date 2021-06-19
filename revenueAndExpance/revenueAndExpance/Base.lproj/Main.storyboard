@@ -46,7 +46,7 @@
                                 </connections>
                             </segmentedControl>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="TOV-zz-Opx">
-                                <rect key="frame" x="15" y="228" width="384" height="534"/>
+                                <rect key="frame" x="15" y="454" width="384" height="308"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <searchBar key="tableHeaderView" contentMode="redraw" id="Dg9-oG-T8M">
                                     <rect key="frame" x="0.0" y="0.0" width="384" height="44"/>
@@ -129,20 +129,30 @@
                                     <constraint firstItem="lMx-rr-CYI" firstAttribute="top" secondItem="gQM-Ra-fLu" secondAttribute="top" id="fSv-A2-QIO"/>
                                 </constraints>
                             </stackView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sWT-sl-rp8" customClass="PieChartView" customModule="Charts">
+                                <rect key="frame" x="0.0" y="226" width="414" height="220"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="220" id="w0y-u4-B9T"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="hZ4-cd-acX" secondAttribute="trailing" constant="80" id="1JD-L3-Vsu"/>
                             <constraint firstItem="Yw1-Dh-JOO" firstAttribute="top" secondItem="hZ4-cd-acX" secondAttribute="bottom" constant="20" id="8hI-iW-eCx"/>
+                            <constraint firstItem="sWT-sl-rp8" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="8hy-8T-DXw"/>
                             <constraint firstItem="Yw1-Dh-JOO" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="912-xz-75y"/>
                             <constraint firstItem="gQM-Ra-fLu" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="15" id="APY-Cz-Pka"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="gQM-Ra-fLu" secondAttribute="trailing" constant="15" id="OtY-Ps-zEZ"/>
                             <constraint firstItem="Uba-8k-IPv" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="Qfh-FB-T4a"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="sWT-sl-rp8" secondAttribute="trailing" id="Rvt-Ng-Dgy"/>
                             <constraint firstItem="hZ4-cd-acX" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="Tpy-xd-rwE"/>
                             <constraint firstItem="Uba-8k-IPv" firstAttribute="leading" secondItem="hZ4-cd-acX" secondAttribute="trailing" constant="10" id="VYM-6s-0kX"/>
                             <constraint firstItem="gQM-Ra-fLu" firstAttribute="top" secondItem="TOV-zz-Opx" secondAttribute="bottom" constant="10" id="c9R-at-qsc"/>
-                            <constraint firstItem="TOV-zz-Opx" firstAttribute="top" secondItem="Yw1-Dh-JOO" secondAttribute="bottom" constant="10" id="hNd-YX-3Qg"/>
+                            <constraint firstItem="sWT-sl-rp8" firstAttribute="top" secondItem="Yw1-Dh-JOO" secondAttribute="bottom" constant="8" id="eQI-0s-MUX"/>
+                            <constraint firstItem="TOV-zz-Opx" firstAttribute="top" secondItem="sWT-sl-rp8" secondAttribute="bottom" constant="8" id="fkJ-jk-Vwj"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="TOV-zz-Opx" secondAttribute="bottom" constant="100" id="hT3-rH-iz2"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Yw1-Dh-JOO" secondAttribute="trailing" constant="10" id="i9w-SB-Sjc"/>
                             <constraint firstItem="hZ4-cd-acX" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="kjc-ou-SEE"/>
@@ -160,11 +170,12 @@
                         <outlet property="srchbarFilterTableData" destination="Dg9-oG-T8M" id="7HC-dr-zgr"/>
                         <outlet property="tblDataDisplay" destination="TOV-zz-Opx" id="dul-Pt-UbD"/>
                         <outlet property="txtDate" destination="hZ4-cd-acX" id="2ae-Lf-XE0"/>
+                        <outlet property="viewPieChartView" destination="sWT-sl-rp8" id="UJv-Dy-75m"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-401" y="779"/>
+            <point key="canvasLocation" x="-401.44927536231887" y="778.79464285714278"/>
         </scene>
         <!--Xadd New Reve And Expance View Controller-->
         <scene sceneID="0v0-aG-lne">

@@ -1,0 +1,6 @@
+framework module Pods_revenueAndExpance_revenueAndExpanceUITests {
+  umbrella header "Pods-revenueAndExpance-revenueAndExpanceUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import Charts
 struct DayData{
     
     var strDate = String()
@@ -16,12 +16,19 @@ struct DayData{
 
 
 class ViewController: UIViewController , UITableViewDelegate , UITableViewDataSource, UISearchBarDelegate {
+    
+    @IBOutlet weak var viewPieChartView: PieChartView!
+    
     var datePicke = UIDatePicker()
     var toolBar = UIToolbar()
     var db:DBHelper = DBHelper()
     var revExpance:[RevExpance] = []
     var total : Float = 0
     var arrayDistinctDate : [String] = []
+    var totalRevenue : Float = 0.0
+    var totalExpance : Float = 0.0
+    
+    
     
     @IBOutlet weak var srchbarFilterTableData: UISearchBar!
     var arrDayWiseData = [DayData]()
@@ -36,6 +43,10 @@ class ViewController: UIViewController , UITableViewDelegate , UITableViewDataSo
     var toolbar = UIToolbar()
     var datePicker = UIDatePicker()
     
+    func pieChartUpdate () {
+        //future home of bar chart code
+    }
+   
     override func viewDidLoad() {
         super.viewDidLoad()
         let containerView = UIControl(frame: CGRect.init(x: 0, y: 0, width: 30, height: 30))
@@ -65,7 +76,13 @@ class ViewController: UIViewController , UITableViewDelegate , UITableViewDataSo
         var str : String = "ABCDEFGHIJKLMN"
         srchbarFilterTableData.showsCancelButton = true
         srchbarFilterTableData.delegate = self
+        
+        
+   
+      
+        
     }
+    
     
     override func viewWillAppear(_ animated: Bool) {
          arrayDistinctDate = []
@@ -84,8 +101,46 @@ class ViewController: UIViewController , UITableViewDelegate , UITableViewDataSo
         setAndCountNoOfDistinctDate()
         tblDataDisplay.reloadData()
         lblDisplayTotal.text = "\(total)"
+        
+        db.totalRevanue(completion: { [self] (isSuccess, sum) in
+       //     db.databaseClose()
+            if isSuccess{
+                totalRevenue = sum
+                db.totalExpance { (isSucces, sum) in
+                    if isSuccess{
+                        totalExpance = sum
+                        pieChartInitilize()
+                    }
+                }
+            }
+        })
     }
     
+    func pieChartInitilize()  {
+        
+  
+        
+        let entry1 = PieChartDataEntry(value: Double(totalRevenue), label: "Revanue" )
+        let entry2 = PieChartDataEntry(value: Double(totalExpance), label: "Expance")
+    
+        let dataSet = PieChartDataSet(entries: [entry1, entry2], label: "Widget Types")
+        dataSet.colors = ChartColorTemplates.material()
+        let data = PieChartData(dataSet: dataSet)
+        
+        viewPieChartView.data = data
+        viewPieChartView.chartDescription?.text = "Revanue Expance Chart"
+
+//        viewPieChartView.backgroundColor = UIColor.black
+//        viewPieChartView.holeColor = UIColor.clear
+//        viewPieChartView.chartDescription?.textColor = UIColor.white
+//        viewPieChartView.legend.textColor = UIColor.white
+        
+        viewPieChartView.entryLabelColor = .black
+       // viewPieChartView.tintColor = .red
+        viewPieChartView.noDataTextColor = .red
+        
+          viewPieChartView.notifyDataSetChanged()
+    }
     @objc func cancel()
     {
         txtDate.resignFirstResponder()

@@ -119,6 +119,54 @@ class DBHelper
         databaseClose()
         return 0
     }
+    func totalRevanue(completion:@escaping (Bool,Float) -> Void) {
+        //SELECT sum("balance") FROM "users"
+        //databaseClose()
+        db=openDatabase()
+        let selectStatementString = "select SUM(amount) from revexpance where isrevenue=1;"
+        var selectStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(db, selectStatementString, -1, &selectStatement, nil) == SQLITE_OK
+        {
+            while(sqlite3_step(selectStatement) == SQLITE_ROW){
+              let sumOfRevanue = sqlite3_column_int(selectStatement, 0)
+                databaseClose()
+                completion(true, Float(sumOfRevanue))
+          }
+        }
+        else
+        {
+            let errmsg = String(cString: sqlite3_errmsg(db)!)
+            databaseClose()
+            completion(true, 0)
+            print("error preparing select: \(errmsg)")
+        }
+       
+    }
+    func totalExpance(completion:@escaping (Bool,Float) -> Void) {
+        //SELECT sum("balance") FROM "users"
+        //databaseClose()
+        db=openDatabase()
+        let selectStatementString = "select SUM(amount) from revexpance where isrevenue=0;"
+        var selectStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(db, selectStatementString, -1, &selectStatement, nil) == SQLITE_OK
+        {
+            while(sqlite3_step(selectStatement) == SQLITE_ROW){
+              let sumOfExpance = sqlite3_column_int(selectStatement, 0)
+             // print(" NO OF Q: \(NoOfQuetionInTable)")
+                databaseClose()
+                completion(true, Float(sumOfExpance))
+          }
+        }
+        else
+        {
+            let errmsg = String(cString: sqlite3_errmsg(db)!)
+            databaseClose()
+            completion(false, 0)
+            print("error preparing select: \(errmsg)")
+        }
+        
+       
+    }
     func readAll() -> [RevExpance] {
         //databaseClose()
         db=openDatabase()
